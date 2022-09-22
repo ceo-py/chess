@@ -5,33 +5,29 @@ import os
 
 FPS = 60
 pygame.init()
-width = 800
-height = 800
+WIDTH = 800
+HEIGHT = 800
 pygame.display.set_caption("Chess Test")
-window = pygame.display.set_mode((width, height))
-bg_img = pygame.image.load('background.jpg')
-bg_img = pygame.transform.scale(bg_img, (width, height))
+window = pygame.display.set_mode((WIDTH, HEIGHT))
+bg_img = pygame.transform.scale(pygame.image.load('background.jpg'), (WIDTH, HEIGHT))
 chess_board = create_chess_board()
-moving = False
-selected_target = False
+moving, selected_target, running = False, False, True
 BLUE = (0, 0, 255)
 player = 1
 
-for row in range(8):
-    for col in range(8):
-        if not isinstance(chess_board[row][col], str):
-            chess_board[row][col].display = (
-                pygame.transform.scale(pygame.image.load(os.path.join(chess_board[row][col].picture)),
-                                       (100, 100)))
 
-
-def draw_pawns():
+def draw_pawns(scale=False):
     for row in range(8):
         for col in range(8):
             if not isinstance(chess_board[row][col], str):
-                row_pos, col_pos = [x * 100 for x in chess_board[row][col].position]
-                chess_board[row][col].mouse_pos = ((range(col_pos, col_pos + 100)), (range(row_pos, row_pos + 100)))
-                window.blit(chess_board[row][col].display, (col_pos, row_pos))
+                if scale:
+                    chess_board[row][col].display = (
+                        pygame.transform.scale(pygame.image.load(os.path.join(chess_board[row][col].picture)),
+                                               (100, 100)))
+                else:
+                    row_pos, col_pos = [x * 100 for x in chess_board[row][col].position]
+                    chess_board[row][col].mouse_pos = ((range(col_pos, col_pos + 100)), (range(row_pos, row_pos + 100)))
+                    window.blit(chess_board[row][col].display, (col_pos, row_pos))
 
 
 def get_figure_pos_to_put(row, col):
@@ -54,7 +50,8 @@ def get_figure_pos_to_put(row, col):
     return row, col
 
 
-running = True
+draw_pawns(True)
+
 while running:
     window.blit(bg_img, (0, 0))
     draw_pawns()
@@ -81,7 +78,6 @@ while running:
                                     move_target.check_right_move(chess_board)
                                     print(move_target.position)
                                     selected_target = True
-
 
         if event.type == MOUSEBUTTONDOWN and selected_target:
             if rect.collidepoint(event.pos):
