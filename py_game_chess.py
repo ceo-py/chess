@@ -80,6 +80,9 @@ while running:
                                     row_pos, col_pos = [(x * 100) + 50 for x in move_target.position]
                                     rect = move_target.display.get_rect(center=(col_pos, row_pos))
                                     move_target.check_right_move(chess_board)
+                                    if "Rook" in move_target.name:
+                                        move_target.castling = []
+                                        move_target.check_castling(chess_board)
                                     print(move_target.position)
                                     selected_target = True
 
@@ -101,7 +104,7 @@ while running:
             print(move_target.position)
             print(move_target.available_moves)
             if [row, col] in move_target.available_moves:
-                if "Pawn" in move_target.name:
+                if any(x in move_target.name for x in ("Pawn", "Rook", "King")):
                     move_target.first_move = False
                 chess_board[row][col] = move_target
                 move_target.position = (row, col)
@@ -115,7 +118,7 @@ while running:
 
     if selected_target:
         window.blit(move_target.display, rect)
-        pygame.draw.rect(window, BLUE, rect, 2)
+        pygame.draw.rect(window, BLUE, rect, 4)
 
     pygame.display.update()
 pygame.quit()
