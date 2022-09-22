@@ -30,6 +30,21 @@ class Figure:
     def movement(self, row, col, direction):
         return row + directions[direction][0], col + directions[direction][1]
 
+    def general_move(self, matrix, steps, move_directions):
+        for direction in move_directions:
+            row, col = self.row, self.col
+            for step in range(steps):
+                row, col = self.movement(row, col, direction)
+                if self.check_board(row, col):
+                    print(f"{row}, {col} - rook")
+                    figure = matrix[row][col]
+                if self.check_board(row, col) and isinstance(figure, str) or \
+                        self.check_board(row, col) and not isinstance(figure, str) and figure.color \
+                        != self.color:
+                    self.available_moves.append([row, col])
+                else:
+                    break
+
 
 class Pawn(Figure):
 
@@ -63,19 +78,7 @@ class Pawn(Figure):
 class Rook(Figure):
 
     def check_right_move(self, matrix):
-        for direction in list(directions.keys())[:4]:
-            row, col = self.row, self.col
-            for step in range(CHESS_BOARD_SIZE):
-                row, col = self.movement(row, col, direction)
-                if self.check_board(row, col):
-                    print(f"{row}, {col} - rook")
-                    figure = matrix[row][col]
-                if self.check_board(row, col) and isinstance(figure, str) or \
-                        self.check_board(row, col) and not isinstance(figure, str) and figure.color \
-                        != self.color:
-                    self.available_moves.append([row, col])
-                else:
-                    break
+        self.general_move(matrix, CHESS_BOARD_SIZE, list(directions.keys())[:4])
 
 
 class Knight(Figure):
@@ -95,55 +98,19 @@ class Knight(Figure):
 class Bishop(Figure):
 
     def check_right_move(self, matrix):
-        for direction in list(directions.keys())[4:-1]:
-            row, col = self.row, self.col
-            for step in range(CHESS_BOARD_SIZE):
-                row, col = self.movement(row, col, direction)
-                if self.check_board(row, col):
-                    print(f"{row}, {col} - rook")
-                    figure = matrix[row][col]
-                if self.check_board(row, col) and isinstance(figure, str) or \
-                        self.check_board(row, col) and not isinstance(figure, str) and figure.color \
-                        != self.color:
-                    self.available_moves.append([row, col])
-                else:
-                    break
+        self.general_move(matrix, CHESS_BOARD_SIZE, list(directions.keys())[4:-1])
 
 
 class Queen(Figure):
 
     def check_right_move(self, matrix):
-        for direction in list(directions.keys())[:-1]:
-            row, col = self.row, self.col
-            for step in range(CHESS_BOARD_SIZE):
-                row, col = self.movement(row, col, direction)
-                if self.check_board(row, col):
-                    print(f"{row}, {col} - rook")
-                    figure = matrix[row][col]
-                if self.check_board(row, col) and isinstance(figure, str) or \
-                        self.check_board(row, col) and not isinstance(figure, str) and figure.color \
-                        != self.color:
-                    self.available_moves.append([row, col])
-                else:
-                    break
+        self.general_move(matrix, CHESS_BOARD_SIZE, list(directions.keys())[:-1])
 
 
 class King(Figure):
 
     def check_right_move(self, matrix):
-        for direction in list(directions.keys())[:-1]:
-            row, col = self.row, self.col
-            for step in range(1):
-                row, col = self.movement(row, col, direction)
-                if self.check_board(row, col):
-                    print(f"{row}, {col} - rook")
-                    figure = matrix[row][col]
-                if self.check_board(row, col) and isinstance(figure, str) or \
-                        self.check_board(row, col) and not isinstance(figure, str) and figure.color \
-                        != self.color:
-                    self.available_moves.append([row, col])
-                else:
-                    break
+        self.general_move(matrix, CHESS_BOARD_SIZE, list(directions.keys())[:-1])
 
 
 def create_chess_board():

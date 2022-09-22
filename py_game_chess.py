@@ -31,7 +31,7 @@ def draw_pawns(scale=False):
 
 
 def get_figure_pos_to_put(row, col):
-    print(f"Where to step before calibration {row} - {col}")
+
     if col <= 50:
         col = 0
     elif col <= 100:
@@ -51,9 +51,6 @@ def get_figure_pos_to_put(row, col):
             row = int(str(row)[0]) + 1
         else:
             row = int(str(row)[0])
-
-
-    print(f"Where to step after calibration {row} - {col}")
     return row, col
 
 
