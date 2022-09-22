@@ -14,10 +14,15 @@ directions = {"up": (-1, 0), "down": (1, 0), "left": (0, -1), "right": (0, 1),
 
 class Figure:
     def __init__(self, name: str, color: str, position: tuple):
-        self.name = name
         self.row, self.col = position
-        self.color = color
         self.available_moves = []
+        self.name = name
+        self.position = position
+        self.mouse_pos = None
+        self.color = color
+        self.first_move = True
+        self.picture = f"{self.color}_{self.name.split(' - ')[0].lower()}.png"
+        self.display = None
 
     def check_board(self, row, col):
         return 0 <= row < CHESS_BOARD_SIZE and 0 <= col < CHESS_BOARD_SIZE
@@ -27,15 +32,6 @@ class Figure:
 
 
 class Pawn(Figure):
-    def __init__(self, name: str, color: str, position: tuple):
-        super().__init__(name, color, position)
-        self.name = name
-        self.position = position
-        self.mouse_pos = None
-        self.color = color
-        self.first_move = True
-        self.picture = f"{self.color}_pawn.png"
-        self.display = None
 
     def check_right_move(self, matrix):
         color_ = {
@@ -65,14 +61,6 @@ class Pawn(Figure):
 
 
 class Rook(Figure):
-    def __init__(self, name: str, color: str, position: tuple):
-        super().__init__(name, color, position)
-        self.name = name
-        self.position = position
-        self.color = color
-        self.first_move = True
-        self.picture = f"{self.color}_rook.png"
-        self.display = None
 
     def check_right_move(self, matrix):
         for direction in list(directions.keys())[:4]:
@@ -91,14 +79,6 @@ class Rook(Figure):
 
 
 class Knight(Figure):
-    def __init__(self, name: str, color: str, position: tuple):
-        super().__init__(name, color, position)
-        self.name = name
-        self.position = position
-        self.color = color
-        self.first_move = True
-        self.picture = f"{self.color}_knight.png"
-        self.display = None
 
     def check_right_move(self, matrix):
         for row, col in directions["knight"].values():
@@ -113,14 +93,6 @@ class Knight(Figure):
 
 
 class Bishop(Figure):
-    def __init__(self, name: str, color: str, position: tuple):
-        super().__init__(name, color, position)
-        self.name = name
-        self.position = position
-        self.color = color
-        self.first_move = True
-        self.picture = f"{self.color}_bishop.png"
-        self.display = None
 
     def check_right_move(self, matrix):
         for direction in list(directions.keys())[4:-1]:
@@ -139,14 +111,6 @@ class Bishop(Figure):
 
 
 class Queen(Figure):
-    def __init__(self, name: str, color: str, position: tuple):
-        super().__init__(name, color, position)
-        self.name = name
-        self.position = position
-        self.color = color
-        self.first_move = True
-        self.picture = f"{self.color}_king.png"
-        self.display = None
 
     def check_right_move(self, matrix):
         for direction in list(directions.keys())[:-1]:
@@ -165,14 +129,6 @@ class Queen(Figure):
 
 
 class King(Figure):
-    def __init__(self, name: str, color: str, position: tuple):
-        super().__init__(name, color, position)
-        self.name = name
-        self.position = position
-        self.color = color
-        self.first_move = True
-        self.picture = f"{self.color}_queen.png"
-        self.display = None
 
     def check_right_move(self, matrix):
         for direction in list(directions.keys())[:-1]:
