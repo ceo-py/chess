@@ -31,22 +31,29 @@ def draw_pawns(scale=False):
 
 
 def get_figure_pos_to_put(row, col):
-    if col <= 100:
+    print(f"Where to step before calibration {row} - {col}")
+    if col <= 50:
         col = 0
+    elif col <= 100:
+        col = 1
     else:
-        if int(str(col)[1:]) >= 50:
+        if int(str(col)[1:]) >= 50 and col > 100:
             col = int(str(col)[0]) + 1
         else:
             col = int(str(col)[0])
 
-    if row <= 100:
+    if row <= 50:
         row = 0
+    elif row <= 100:
+        row = 1
     else:
-        if int(str(row)[1:]) >= 50:
+        if int(str(row)[1:]) >= 50 and row > 100:
             row = int(str(row)[0]) + 1
         else:
             row = int(str(row)[0])
 
+
+    print(f"Where to step after calibration {row} - {col}")
     return row, col
 
 
