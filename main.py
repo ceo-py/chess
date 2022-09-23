@@ -20,7 +20,7 @@ class Figure:
         self.position = position
         self.mouse_pos = None
         self.color = color
-        self.picture = f"{os.getcwd()}\pictures\{self.color}_{self.name.split(' - ')[0].lower()}.png"
+        self.picture = f"{CURRENT_PATH}\pictures\{self.color}_{self.name.split(' - ')[0].lower()}.png"
         self.display = None
 
     @staticmethod
