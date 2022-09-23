@@ -4,4 +4,4 @@ Chess game project that I made as test for matrix movement, oop inherit function
 
 YOU CAN TRY THE GAME HERE 
 
-https://replit.com/@testScriptCeo/Hungry-Georgy#main.py
+https://replit.com/@testScriptCeo/Chess#chess.py
