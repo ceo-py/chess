@@ -9,7 +9,7 @@ WIDTH = 800
 HEIGHT = 800
 pygame.display.set_caption("Chess Test")
 window = pygame.display.set_mode((WIDTH, HEIGHT))
-bg_img = pygame.transform.scale(pygame.image.load('background.jpg'), (WIDTH, HEIGHT))
+bg_img = pygame.transform.scale(pygame.image.load(f"{CURRENT_PATH}\pictures\\background.jpg"), (WIDTH, HEIGHT))
 chess_board = create_chess_board()
 moving, selected_target, running = False, False, True
 BLUE = (0, 0, 255)

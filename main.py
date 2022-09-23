@@ -1,6 +1,8 @@
-CHESS_BOARD_SIZE = 8
-chess_board = []
+import os
 
+
+CHESS_BOARD_SIZE, CURRENT_PATH = 8, os.getcwd()
+chess_board = []
 directions = {"up": (-1, 0), "down": (1, 0), "left": (0, -1), "right": (0, 1),
               "top left diagonal": (-1, -1), "top right diagonal": (-1, 1),
               "bottom left diagonal": (1, -1), "bottom right diagonal": (1, 1), "knight": {
@@ -18,11 +20,8 @@ class Figure:
         self.position = position
         self.mouse_pos = None
         self.color = color
-        self.first_move = True
-        self.picture = f"{self.color}_{self.name.split(' - ')[0].lower()}.png"
+        self.picture = f"{os.getcwd()}\pictures\{self.color}_{self.name.split(' - ')[0].lower()}.png"
         self.display = None
-        self.castling = None
-
 
     @staticmethod
     def check_board(row, col):
@@ -52,6 +51,10 @@ class Figure:
 
 
 class Pawn(Figure):
+    def __init__(self, name: str, color: str, position: tuple):
+        super(Pawn, self).__init__(name, color, position)
+        self.castling = None
+        self.first_move = True
 
     def check_right_move(self, matrix):
         color_ = {
@@ -81,6 +84,10 @@ class Pawn(Figure):
 
 
 class Rook(Figure):
+    def __init__(self, name: str, color: str, position: tuple):
+        super(Rook, self).__init__(name, color, position)
+        self.castling = None
+        self.first_move = True
 
     def check_right_move(self, matrix):
         self.general_move(matrix, CHESS_BOARD_SIZE, list(directions.keys())[:4])
@@ -123,6 +130,10 @@ class Queen(Figure):
 
 
 class King(Figure):
+    def __init__(self, name: str, color: str, position: tuple):
+        super(King, self).__init__(name, color, position)
+        self.castling = None
+        self.first_move = True
 
     def check_right_move(self, matrix):
         self.general_move(matrix, 1, list(directions.keys())[:-1])
