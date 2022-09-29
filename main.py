@@ -1,6 +1,5 @@
 import os
 
-
 CHESS_BOARD_SIZE, CURRENT_PATH = 8, os.getcwd()
 chess_board = []
 directions = {"up": (-1, 0), "down": (1, 0), "left": (0, -1), "right": (0, 1),
@@ -140,42 +139,40 @@ class King(Figure):
 
 
 def create_chess_board():
+    colors = {
+        6: "w",
+        1: "b",
+        7: "w",
+        0: "b"
+
+    }
+
     for row in range(CHESS_BOARD_SIZE):
         chess_board.append([])
         for col in range(CHESS_BOARD_SIZE):
             pos = f"{chr(97 + col)}{abs(row - 8)}"
 
-            if row == 6:
-                chess_board[row].append(Pawn(f"Pawn - {pos}", "w", (row, col)))
-            elif row == 1:
-                chess_board[row].append(Pawn(f"Pawn - {pos}", "b", (row, col)))
+            if row in (6, 1):
+                chess_board[row].append(Pawn(f"Pawn - {pos}", colors[row], (row, col)))
 
-            elif row == 7 and any(col == x for x in (0, 7)):
-                chess_board[row].append(Rook(f"Rook - {pos}", "w", (row, col)))
-            elif row == 0 and any(col == x for x in (0, 7)):
-                chess_board[row].append(Rook(f"Rook - {pos}", "b", (row, col)))
-
-            elif row == 7 and any(col == x for x in (1, 6)):
-                chess_board[row].append(Knight(f"Knight - {pos}", "w", (row, col)))
-            elif row == 0 and any(col == x for x in (1, 6)):
-                chess_board[row].append(Knight(f"Knight - {pos}", "b", (row, col)))
-
-            elif row == 7 and any(col == x for x in (2, 5)):
-                chess_board[row].append(Bishop(f"Bishop - {pos}", "w", (row, col)))
-            elif row == 0 and any(col == x for x in (2, 5)):
-                chess_board[row].append(Bishop(f"Bishop - {pos}", "b", (row, col)))
-
-            elif row == 7 and col == 3:
-                chess_board[row].append(Queen(f"Queen - {pos}", "w", (row, col)))
-            elif row == 0 and col == 3:
-                chess_board[row].append(Queen(f"Queen - {pos}", "b", (row, col)))
-
-            elif row == 7 and col == 4:
-                chess_board[row].append(King(f"King - {pos}", "w", (row, col)))
-            elif row == 0 and col == 4:
-                chess_board[row].append(King(f"King - {pos}", "b", (row, col)))
-
-            else:
+            elif row not in (7, 0):
                 chess_board[row].append(f"{chr(97 + col)}{abs(row - 8)}")
+                continue
+
+            elif col in (0, 7):
+                chess_board[row].append(Rook(f"Rook - {pos}", colors[row], (row, col)))
+
+            elif col in (1, 6):
+                chess_board[row].append(Knight(f"Knight - {pos}", colors[row], (row, col)))
+
+            elif col in (2, 5):
+                chess_board[row].append(Bishop(f"Bishop - {pos}", colors[row], (row, col)))
+
+            elif col == 3:
+                chess_board[row].append(Queen(f"Queen - {pos}", colors[row], (row, col)))
+
+            elif col == 4:
+                chess_board[row].append(King(f"King - {pos}", colors[row], (row, col)))
+
 
     return chess_board

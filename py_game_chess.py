@@ -14,6 +14,9 @@ chess_board = create_chess_board()
 moving, selected_target, running = False, False, True
 BLUE = (0, 0, 255)
 player = 1
+SIZE_R = WIDTH / 8
+SIZE_C = HEIGHT / 8
+
 
 
 def draw_pawns(scale=False):
@@ -23,7 +26,7 @@ def draw_pawns(scale=False):
                 if scale:
                     chess_board[row][col].display = (
                         pygame.transform.scale(pygame.image.load(os.path.join(chess_board[row][col].picture)),
-                                               (100, 100)))
+                                               (SIZE_C, SIZE_R)))
                 else:
                     row_pos, col_pos = [x * 100 for x in chess_board[row][col].position]
                     chess_board[row][col].mouse_pos = ((range(col_pos, col_pos + 100)), (range(row_pos, row_pos + 100)))
