@@ -14,47 +14,20 @@ chess_board = create_chess_board()
 moving, selected_target, running = False, False, True
 BLUE = (0, 0, 255)
 player = 1
-SIZE_R = WIDTH / 8
-SIZE_C = HEIGHT / 8
-
+SIZE_R = HEIGHT // 8
+SIZE_C = WIDTH // 8
 
 
 def draw_pawns(scale=False):
-    for row in range(8):
-        for col in range(8):
+    for row in range(CHESS_BOARD_SIZE):
+        for col in range(CHESS_BOARD_SIZE):
             if not isinstance(chess_board[row][col], str):
                 if scale:
                     chess_board[row][col].display = (
                         pygame.transform.scale(pygame.image.load(os.path.join(chess_board[row][col].picture)),
                                                (SIZE_C, SIZE_R)))
                 else:
-                    row_pos, col_pos = [x * 100 for x in chess_board[row][col].position]
-                    chess_board[row][col].mouse_pos = ((range(col_pos, col_pos + 100)), (range(row_pos, row_pos + 100)))
-                    window.blit(chess_board[row][col].display, (col_pos, row_pos))
-
-
-def get_figure_pos_to_put(row, col):
-
-    if col <= 50:
-        col = 0
-    elif col <= 100:
-        col = 1
-    else:
-        if int(str(col)[1:]) >= 50 and col > 100:
-            col = int(str(col)[0]) + 1
-        else:
-            col = int(str(col)[0])
-
-    if row <= 50:
-        row = 0
-    elif row <= 100:
-        row = 1
-    else:
-        if int(str(row)[1:]) >= 50 and row > 100:
-            row = int(str(row)[0]) + 1
-        else:
-            row = int(str(row)[0])
-    return row, col
+                    window.blit(chess_board[row][col].display, (col * SIZE_C, row * SIZE_R))
 
 
 draw_pawns(True)
@@ -67,27 +40,26 @@ while running:
         if event.type == QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_presses = pygame.mouse.get_pressed()
-            if mouse_presses[0]:
-                print("Left Mouse key was clicked")
-                mouse_pos_test = pygame.mouse.get_pos()
-                print(mouse_pos_test)
-                for row in range(8):
-                    for col in range(8):
-                        if not isinstance(chess_board[row][col], str):
-                            if mouse_pos_test[0] in chess_board[row][col].mouse_pos[0] and \
-                                    mouse_pos_test[1] in chess_board[row][col].mouse_pos[1]:
-                                if chess_board[row][col].color == "w" and player % 2 != 0 or \
-                                        chess_board[row][col].color == "b" and player % 2 == 0:
-                                    move_target, chess_board[row][col] = chess_board[row][col], "None"
-                                    row_pos, col_pos = [(x * 100) + 50 for x in move_target.position]
-                                    rect = move_target.display.get_rect(center=(col_pos, row_pos))
-                                    move_target.check_right_move(chess_board)
-                                    if "Rook" in move_target.name:
-                                        move_target.castling = []
-                                        move_target.check_castling(chess_board)
-                                    print(move_target.position)
-                                    selected_target = True
+            m_col, m_row = [int(x // size) for x, size in zip(pygame.mouse.get_pos(), [SIZE_C, SIZE_R])]
+            m_left_click, _, m_right_click = pygame.mouse.get_pressed()
+            try:
+                selected_figure = chess_board[m_row][m_col]
+                print(m_row, m_col, selected_figure)
+            except IndexError:
+                continue
+            if m_left_click and not isinstance(selected_figure, str):
+                if selected_figure.color == "w" and player % 2 != 0 or \
+                        selected_figure.color == "b" and player % 2 == 0:
+
+                    move_target, chess_board[m_row][m_col] = selected_figure, f"{chr(97 + m_col)}{abs(m_row - 8)}"
+                    row_pos, col_pos = [(x * 100) + 50 for x in move_target.position]
+                    rect = move_target.display.get_rect(center=(col_pos, row_pos))
+                    move_target.check_right_move(chess_board)
+                    print(move_target.available_moves)
+                    if "Rook" in move_target.name:
+                        move_target.castling = []
+                        move_target.check_castling(chess_board)
+                    selected_target = True
 
         if event.type == MOUSEBUTTONDOWN and selected_target:
             if rect.collidepoint(event.pos):
@@ -101,27 +73,24 @@ while running:
             rect.move_ip(event.rel)
 
         if event.type == MOUSEBUTTONUP and selected_target:
-            last_row, last_col = move_target.position
-            col, row = get_figure_pos_to_put(rect[0], rect[1])
-
-            print(move_target.position)
-            print(move_target.available_moves)
-            if [row, col] in move_target.available_moves:
-                if any(x in move_target.name for x in ("Pawn", "Rook", "King")):
+            p_col, p_row = [x // size for x, size in zip(pygame.mouse.get_pos(), [SIZE_C, SIZE_R])]
+            print(f"drop point {p_row} {p_col}")
+            if [p_row, p_col] in move_target.available_moves:
+                if move_target.name in ("Pawn", "Rook", "King"):
                     move_target.first_move = False
-                chess_board[row][col] = move_target
-                move_target.position = (row, col)
-                move_target.row, move_target.col = row, col
+                chess_board[p_row][p_col] = move_target
+                move_target.position = (p_row, p_col)
+                move_target.row, move_target.col = p_row, p_col
                 player += 1
             else:
-                chess_board[last_row][last_col] = move_target
-                move_target.position = (last_row, last_col)
+                chess_board[m_row][m_col] = move_target
+                move_target.position = (m_row, m_col)
             selected_target = False
             move_target.available_moves = []
 
     if selected_target:
         window.blit(move_target.display, rect)
-        pygame.draw.rect(window, BLUE, rect, 4)
+        pygame.draw.rect(window, BLUE, rect, 5)
 
     pygame.display.update()
 pygame.quit()

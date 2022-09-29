@@ -174,5 +174,4 @@ def create_chess_board():
             elif col == 4:
                 chess_board[row].append(King(f"King - {pos}", colors[row], (row, col)))
 
-
     return chess_board
