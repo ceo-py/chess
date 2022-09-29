@@ -35,16 +35,19 @@ class Figure:
             row, col = self.row, self.col
             for step in range(steps):
                 row, col = self.movement(row, col, direction)
-                if self.check_board(row, col):
-                    print(f"{row}, {col} - rook")
-                    figure = matrix[row][col]
-                if self.check_board(row, col) and isinstance(figure, str) or \
-                        self.check_board(row, col) and not isinstance(figure, str) and figure.color \
-                        != self.color:
+                if not self.check_board(row, col):
+                    break
+                figure = matrix[row][col]
+                if isinstance(figure, str):
                     if castling:
                         self.castling.append([row, col])
                     else:
                         self.available_moves.append([row, col])
+
+                elif not isinstance(figure, str) and figure.color != self.color:
+                    self.available_moves.append([row, col])
+                    break
+
                 else:
                     break
 
@@ -52,10 +55,11 @@ class Figure:
 class Pawn(Figure):
     def __init__(self, name: str, color: str, position: tuple):
         super(Pawn, self).__init__(name, color, position)
-        self.castling = None
         self.first_move = True
+        self.make_queen = False
 
     def check_right_move(self, matrix):
+        print("pawn moves")
         color_ = {
             "w": ["up", "top left diagonal", "top right diagonal"],
             "b": ["down", "bottom left diagonal", "bottom right diagonal"]
@@ -68,8 +72,7 @@ class Pawn(Figure):
         if not self.available_moves:
             for steps in range(step):
                 row, col = self.movement(row, col, color_[self.color][0])
-                figure = matrix[row][col]
-                if self.check_board(row, col) and isinstance(figure, str):
+                if self.check_board(row, col) and isinstance(matrix[row][col], str):
                     self.available_moves.append([row, col])
 
             for pos in range(1, 3):
@@ -78,8 +81,10 @@ class Pawn(Figure):
                         != self.color:
                     self.available_moves.append([row, col])
 
-    def make_queen(self):
-        pass
+        if self.row in (0, 7):
+            self.make_queen = True
+            print(self.make_queen)
+
 
 
 class Rook(Figure):

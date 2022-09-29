@@ -18,6 +18,15 @@ SIZE_R = HEIGHT // 8
 SIZE_C = WIDTH // 8
 
 
+def make_new_queen_pic(row, col, player):
+    color = {7: "b", 0: "w"}
+    chess_board[row][col] = Queen(f"Queen - made", color[row], (row, col))
+    chess_board[row][col].display = (
+        pygame.transform.scale(pygame.image.load(os.path.join(chess_board[row][col].picture)),
+                               (SIZE_C, SIZE_R)))
+    return player + 1
+
+
 def draw_pawns(scale=False):
     for row in range(CHESS_BOARD_SIZE):
         for col in range(CHESS_BOARD_SIZE):
@@ -55,7 +64,7 @@ while running:
                     row_pos, col_pos = [(x * 100) + 50 for x in move_target.position]
                     rect = move_target.display.get_rect(center=(col_pos, row_pos))
                     move_target.check_right_move(chess_board)
-                    print(move_target.available_moves)
+                    print(len(move_target.available_moves), move_target.available_moves)
                     if "Rook" in move_target.name:
                         move_target.castling = []
                         move_target.check_castling(chess_board)
@@ -76,15 +85,18 @@ while running:
             p_col, p_row = [x // size for x, size in zip(pygame.mouse.get_pos(), [SIZE_C, SIZE_R])]
             print(f"drop point {p_row} {p_col}")
             if [p_row, p_col] in move_target.available_moves:
-                if move_target.name in ("Pawn", "Rook", "King"):
+                if any(x in move_target.name for x in ("Pawn", "Rook", "King")):
                     move_target.first_move = False
                 chess_board[p_row][p_col] = move_target
                 move_target.position = (p_row, p_col)
                 move_target.row, move_target.col = p_row, p_col
                 player += 1
             else:
-                chess_board[m_row][m_col] = move_target
-                move_target.position = (m_row, m_col)
+                if "Pawn" in move_target.name and move_target.make_queen:
+                    player = make_new_queen_pic(m_row, m_col, player)
+                else:
+                    chess_board[m_row][m_col] = move_target
+                    move_target.position = (m_row, m_col)
             selected_target = False
             move_target.available_moves = []
 
