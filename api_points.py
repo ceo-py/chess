@@ -38,13 +38,25 @@ def matrix_current_pos(chess_board):
                                "moves": 0})
 
             else:
-                result.append({"position": web_pos[f"{row} {col}"], "type": symbol_matrix.name.split("-")[0][:-1].lower(),
-                               "color": symbol_matrix.color, "row": row, "col": col,
-                               "moves": getting_legal_moves_ouput(symbol_matrix)})
+                result.append(
+                    {"position": web_pos[f"{row} {col}"], "type": symbol_matrix.name.split("-")[0][:-1].lower(),
+                     "color": symbol_matrix.color, "row": row, "col": col,
+                     "moves": getting_legal_moves_ouput(symbol_matrix)})
     return json.dumps(result, indent=9)
 
 
-@app.route("/new_game", methods=["GET"])
+'''
+id na igrite da 
+end point /games        - POST(create), GET(Read)
+end point /games/{id}   - GET, PUT(update), DELETE
+
+
+imena na igrachi v bodito eventualno za suzdavane
+
+'''
+
+
+@app.route("/games", methods=["POST"])
 def main_game():
     global chess_board
     chess_board = create_chess_board()
@@ -57,9 +69,16 @@ def show_board():
     return matrix_current_pos(chess_board)
 
 
-@app.route("/moves/<string:info>", methods=["POST"])
-def ask_for_available_pos(info):
-    c_row, c_col, m_row, m_col = [int(x) for x in info]
+@app.route("/figure/move", methods=["PUT"])
+def json_req():
+    '''
+    [{'current pos': [1, 0], 'target pos': [2, 0]}]
+
+    :return:
+    '''
+    data = request.get_json()
+    c_row, c_col = data[0]['current pos']
+    m_row, m_col = data[0]['target pos']
     target = chess_board[c_row][c_col]
     try:
         target.available_moves = []
@@ -74,6 +93,5 @@ def ask_for_available_pos(info):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
-    # app.run(port=7777)
-    # app.run(port=7777)
+    app.run(host='0.0.0.0', port=7777)
+
