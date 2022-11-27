@@ -4,18 +4,18 @@ from main import *
 import os
 
 FPS = 60
-pygame.init()
 WIDTH = 800
 HEIGHT = 800
+BLUE = (0, 0, 255)
+SIZE_R = HEIGHT // 8
+SIZE_C = WIDTH // 8
+pygame.init()
 pygame.display.set_caption("Chess Test")
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 bg_img = pygame.transform.scale(pygame.image.load(f"{CURRENT_PATH}\pictures\\background.jpg"), (WIDTH, HEIGHT))
 chess_board = create_chess_board()
 moving, selected_target, running = False, False, True
-BLUE = (0, 0, 255)
 player = 1
-SIZE_R = HEIGHT // 8
-SIZE_C = WIDTH // 8
 
 
 def make_new_queen_pic(row, col, player):
@@ -64,6 +64,10 @@ while running:
                     row_pos, col_pos = [(x * 100) + 50 for x in move_target.position]
                     rect = move_target.display.get_rect(center=(col_pos, row_pos))
                     move_target.check_right_move(chess_board)
+
+                    # [print(' '.join(x if isinstance(x, str) else x.name.split("-")[0] for x in row)) for row in
+                    #  chess_board]
+
                     print(len(move_target.available_moves), move_target.available_moves)
                     if "Rook" in move_target.name:
                         move_target.castling = []

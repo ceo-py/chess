@@ -1,4 +1,5 @@
 import os
+from abc import ABC, abstractmethod
 
 CHESS_BOARD_SIZE, CURRENT_PATH = 8, os.getcwd()
 chess_board = []
@@ -11,7 +12,7 @@ directions = {"up": (-1, 0), "down": (1, 0), "left": (0, -1), "right": (0, 1),
               }
 
 
-class Figure:
+class Figure(ABC):
     def __init__(self, name: str, color: str, position: tuple):
         self.row, self.col = position
         self.available_moves = []
@@ -29,6 +30,10 @@ class Figure:
     @staticmethod
     def movement(row, col, direction):
         return row + directions[direction][0], col + directions[direction][1]
+
+    @abstractmethod
+    def check_right_move(self, data: []):
+        ...
 
     def general_move(self, matrix, steps, move_directions, castling=False):
         for direction in move_directions:
@@ -84,7 +89,6 @@ class Pawn(Figure):
         if self.row in (0, 7):
             self.make_queen = True
             print(self.make_queen)
-
 
 
 class Rook(Figure):
@@ -144,6 +148,8 @@ class King(Figure):
 
 
 def create_chess_board():
+    print("gen new board")
+    chess_board = []
     colors = {
         6: "w",
         1: "b",
