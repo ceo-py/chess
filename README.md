@@ -3,7 +3,7 @@ Chess game project that I made as test for matrix movement, oop inherit function
 [TRY THE GAME HERE](https://replit.com/@testScriptCeo/Chess-test-beta#main.py)
 
 
-![alt text](https://cdn.discordapp.com/attachments/983670671647313930/1022790842949308426/My_Video1.gif)
+![alt text](https://github.com/ceo-py/Project-Pictures/blob/main/chess/chess_example.gif?raw=true)
 
 
 
